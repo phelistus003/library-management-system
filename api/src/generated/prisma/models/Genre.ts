@@ -20,46 +20,64 @@ export type GenreModel = runtime.Types.Result.DefaultSelection<Prisma.$GenrePayl
 
 export type AggregateGenre = {
   _count: GenreCountAggregateOutputType | null
+  _avg: GenreAvgAggregateOutputType | null
+  _sum: GenreSumAggregateOutputType | null
   _min: GenreMinAggregateOutputType | null
   _max: GenreMaxAggregateOutputType | null
 }
 
+export type GenreAvgAggregateOutputType = {
+  id: number | null
+}
+
+export type GenreSumAggregateOutputType = {
+  id: number | null
+}
+
 export type GenreMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
-  description: string | null
+  slug: string | null
 }
 
 export type GenreMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   name: string | null
-  description: string | null
+  slug: string | null
 }
 
 export type GenreCountAggregateOutputType = {
   id: number
   name: number
-  description: number
+  slug: number
   _all: number
 }
 
 
+export type GenreAvgAggregateInputType = {
+  id?: true
+}
+
+export type GenreSumAggregateInputType = {
+  id?: true
+}
+
 export type GenreMinAggregateInputType = {
   id?: true
   name?: true
-  description?: true
+  slug?: true
 }
 
 export type GenreMaxAggregateInputType = {
   id?: true
   name?: true
-  description?: true
+  slug?: true
 }
 
 export type GenreCountAggregateInputType = {
   id?: true
   name?: true
-  description?: true
+  slug?: true
   _all?: true
 }
 
@@ -101,6 +119,18 @@ export type GenreAggregateArgs<ExtArgs extends runtime.Types.Extensions.Internal
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: GenreAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: GenreSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: GenreMinAggregateInputType
@@ -131,15 +161,19 @@ export type GenreGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   _count?: GenreCountAggregateInputType | true
+  _avg?: GenreAvgAggregateInputType
+  _sum?: GenreSumAggregateInputType
   _min?: GenreMinAggregateInputType
   _max?: GenreMaxAggregateInputType
 }
 
 export type GenreGroupByOutputType = {
-  id: string
+  id: number
   name: string
-  description: string | null
+  slug: string
   _count: GenreCountAggregateOutputType | null
+  _avg: GenreAvgAggregateOutputType | null
+  _sum: GenreSumAggregateOutputType | null
   _min: GenreMinAggregateOutputType | null
   _max: GenreMaxAggregateOutputType | null
 }
@@ -163,118 +197,121 @@ export type GenreWhereInput = {
   AND?: Prisma.GenreWhereInput | Prisma.GenreWhereInput[]
   OR?: Prisma.GenreWhereInput[]
   NOT?: Prisma.GenreWhereInput | Prisma.GenreWhereInput[]
-  id?: Prisma.StringFilter<"Genre"> | string
+  id?: Prisma.IntFilter<"Genre"> | number
   name?: Prisma.StringFilter<"Genre"> | string
-  description?: Prisma.StringNullableFilter<"Genre"> | string | null
+  slug?: Prisma.StringFilter<"Genre"> | string
   books?: Prisma.BookListRelationFilter
 }
 
 export type GenreOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  slug?: Prisma.SortOrder
   books?: Prisma.BookOrderByRelationAggregateInput
 }
 
 export type GenreWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   name?: string
+  slug?: string
   AND?: Prisma.GenreWhereInput | Prisma.GenreWhereInput[]
   OR?: Prisma.GenreWhereInput[]
   NOT?: Prisma.GenreWhereInput | Prisma.GenreWhereInput[]
-  description?: Prisma.StringNullableFilter<"Genre"> | string | null
   books?: Prisma.BookListRelationFilter
-}, "id" | "name">
+}, "id" | "name" | "slug">
 
 export type GenreOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrderInput | Prisma.SortOrder
+  slug?: Prisma.SortOrder
   _count?: Prisma.GenreCountOrderByAggregateInput
+  _avg?: Prisma.GenreAvgOrderByAggregateInput
   _max?: Prisma.GenreMaxOrderByAggregateInput
   _min?: Prisma.GenreMinOrderByAggregateInput
+  _sum?: Prisma.GenreSumOrderByAggregateInput
 }
 
 export type GenreScalarWhereWithAggregatesInput = {
   AND?: Prisma.GenreScalarWhereWithAggregatesInput | Prisma.GenreScalarWhereWithAggregatesInput[]
   OR?: Prisma.GenreScalarWhereWithAggregatesInput[]
   NOT?: Prisma.GenreScalarWhereWithAggregatesInput | Prisma.GenreScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"Genre"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Genre"> | number
   name?: Prisma.StringWithAggregatesFilter<"Genre"> | string
-  description?: Prisma.StringNullableWithAggregatesFilter<"Genre"> | string | null
+  slug?: Prisma.StringWithAggregatesFilter<"Genre"> | string
 }
 
 export type GenreCreateInput = {
-  id?: string
   name: string
-  description?: string | null
+  slug: string
   books?: Prisma.BookCreateNestedManyWithoutGenreInput
 }
 
 export type GenreUncheckedCreateInput = {
-  id?: string
+  id?: number
   name: string
-  description?: string | null
+  slug: string
   books?: Prisma.BookUncheckedCreateNestedManyWithoutGenreInput
 }
 
 export type GenreUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   books?: Prisma.BookUpdateManyWithoutGenreNestedInput
 }
 
 export type GenreUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
   books?: Prisma.BookUncheckedUpdateManyWithoutGenreNestedInput
 }
 
 export type GenreCreateManyInput = {
-  id?: string
+  id?: number
   name: string
-  description?: string | null
+  slug: string
 }
 
 export type GenreUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type GenreUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type GenreCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+}
+
+export type GenreAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
 }
 
 export type GenreMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
 }
 
 export type GenreMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  slug?: Prisma.SortOrder
+}
+
+export type GenreSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
 }
 
 export type GenreScalarRelationFilter = {
   is?: Prisma.GenreWhereInput
   isNot?: Prisma.GenreWhereInput
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
 }
 
 export type GenreCreateNestedOneWithoutBooksInput = {
@@ -292,15 +329,14 @@ export type GenreUpdateOneRequiredWithoutBooksNestedInput = {
 }
 
 export type GenreCreateWithoutBooksInput = {
-  id?: string
   name: string
-  description?: string | null
+  slug: string
 }
 
 export type GenreUncheckedCreateWithoutBooksInput = {
-  id?: string
+  id?: number
   name: string
-  description?: string | null
+  slug: string
 }
 
 export type GenreCreateOrConnectWithoutBooksInput = {
@@ -320,15 +356,14 @@ export type GenreUpdateToOneWithWhereWithoutBooksInput = {
 }
 
 export type GenreUpdateWithoutBooksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type GenreUncheckedUpdateWithoutBooksInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -365,7 +400,7 @@ export type GenreCountOutputTypeCountBooksArgs<ExtArgs extends runtime.Types.Ext
 export type GenreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
+  slug?: boolean
   books?: boolean | Prisma.Genre$booksArgs<ExtArgs>
   _count?: boolean | Prisma.GenreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["genre"]>
@@ -373,22 +408,22 @@ export type GenreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type GenreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
+  slug?: boolean
 }, ExtArgs["result"]["genre"]>
 
 export type GenreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
-  description?: boolean
+  slug?: boolean
 }, ExtArgs["result"]["genre"]>
 
 export type GenreSelectScalar = {
   id?: boolean
   name?: boolean
-  description?: boolean
+  slug?: boolean
 }
 
-export type GenreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description", ExtArgs["result"]["genre"]>
+export type GenreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug", ExtArgs["result"]["genre"]>
 export type GenreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   books?: boolean | Prisma.Genre$booksArgs<ExtArgs>
   _count?: boolean | Prisma.GenreCountOutputTypeDefaultArgs<ExtArgs>
@@ -402,9 +437,9 @@ export type $GenrePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     books: Prisma.$BookPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     name: string
-    description: string | null
+    slug: string
   }, ExtArgs["result"]["genre"]>
   composites: {}
 }
@@ -829,9 +864,9 @@ export interface Prisma__GenreClient<T, Null = never, ExtArgs extends runtime.Ty
  * Fields of the Genre model
  */
 export interface GenreFieldRefs {
-  readonly id: Prisma.FieldRef<"Genre", 'String'>
+  readonly id: Prisma.FieldRef<"Genre", 'Int'>
   readonly name: Prisma.FieldRef<"Genre", 'String'>
-  readonly description: Prisma.FieldRef<"Genre", 'String'>
+  readonly slug: Prisma.FieldRef<"Genre", 'String'>
 }
     
 

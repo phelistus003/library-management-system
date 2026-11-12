@@ -1,5 +1,6 @@
 
 import "dotenv/config";
+
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 
@@ -10,77 +11,189 @@ const adapter = new PrismaPg({
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  // Create four genres
-  const genres = [
-    { name: "Fiction", description: "Imaginative stories and novels" },
-    { name: "Technology", description: "Computing and technology" },
-    { name: "Self-help", description: "Personal development books" },
-    { name: "History", description: "Historical events and people" },
+  // 1. Create the four book genres
+  const genreNames = [
+    "Fantasy",
+    "Science Fiction",
+    "Mystery",
+    "Biography",
   ];
 
-  for (const genre of genres) {
-    await prisma.genre.upsert({
-      where: { name: genre.name },
-      update: { description: genre.description },
-      create: genre,
-    });
-  }
+  const genres = await Promise.all(
+    genreNames.map((name) =>
+      prisma.genre.upsert({
+        where: {
+          slug: name.toLowerCase().replace(/\s+/g, "-"),
+        },
+        update: {
+          name,
+        },
+        create: {
+          name,
+          slug: name.toLowerCase().replace(/\s+/g, "-"),
+        },
+      }),
+    ),
+  );
 
-  // Retrieve the genres and their IDs
-  const fiction = await prisma.genre.findUniqueOrThrow({
-    where: { name: "Fiction" },
-  });
+  // 2. Prepare at least 15 books
+  const sampleBooks = [
+    {
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      genre: "Fantasy",
+      isbn: "9780547928227",
+      description: "A fantasy adventure about a hobbit's unexpected journey.",
+    },
+    {
+      title: "Harry Potter and the Philosopher's Stone",
+      author: "J.K. Rowling",
+      genre: "Fantasy",
+      isbn: "9780747532699",
+      description: "A young wizard discovers his magical identity.",
+    },
+    {
+      title: "The Lord of the Rings",
+      author: "J.R.R. Tolkien",
+      genre: "Fantasy",
+      isbn: "9780618640157",
+      description: "An epic journey to destroy a powerful ring.",
+    },
+    {
+      title: "The Name of the Wind",
+      author: "Patrick Rothfuss",
+      genre: "Fantasy",
+      isbn: "9780756404741",
+      description: "The story of a gifted young magician.",
+    },
 
-  const technology = await prisma.genre.findUniqueOrThrow({
-    where: { name: "Technology" },
-  });
+    {
+      title: "Dune",
+      author: "Frank Herbert",
+      genre: "Science Fiction",
+      isbn: "9780441172719",
+      description: "A science fiction epic set on the desert planet Arrakis.",
+    },
+    {
+      title: "1984",
+      author: "George Orwell",
+      genre: "Science Fiction",
+      isbn: "9780451524935",
+      description: "A dystopian novel about surveillance and totalitarianism.",
+    },
+    {
+      title: "Fahrenheit 451",
+      author: "Ray Bradbury",
+      genre: "Science Fiction",
+      isbn: "9781451673319",
+      description: "A future society where books are forbidden.",
+    },
+    {
+      title: "The Martian",
+      author: "Andy Weir",
+      genre: "Science Fiction",
+      isbn: "9780553418026",
+      description: "An astronaut struggles to survive alone on Mars.",
+    },
 
-  const selfHelp = await prisma.genre.findUniqueOrThrow({
-    where: { name: "Self-help" },
-  });
+    {
+      title: "The Big Sleep",
+      author: "Raymond Chandler",
+      genre: "Mystery",
+      isbn: "9780394758282",
+      description: "A private detective investigates a complicated case.",
+    },
+    {
+      title: "Murder on the Orient Express",
+      author: "Agatha Christie",
+      genre: "Mystery",
+      isbn: "9780062693662",
+      description: "Detective Hercule Poirot investigates a murder on a train.",
+    },
+    {
+      title: "The Girl with the Dragon Tattoo",
+      author: "Stieg Larsson",
+      genre: "Mystery",
+      isbn: "9780307454546",
+      description: "A journalist and hacker investigate a disappearance.",
+    },
+    {
+      title: "Gone Girl",
+      author: "Gillian Flynn",
+      genre: "Mystery",
+      isbn: "9780307588371",
+      description: "A psychological mystery surrounding a missing woman.",
+    },
 
-  const history = await prisma.genre.findUniqueOrThrow({
-    where: { name: "History" },
-  });
-
-  // Create sixteen books
-  const books = [
-    { title: "Things Fall Apart", author: "Chinua Achebe", isbn: "9780001", genreId: fiction.id },
-    { title: "The River Between", author: "Ngugi wa Thiong'o", isbn: "9780002", genreId: fiction.id },
-    { title: "The Great Gatsby", author: "F. Scott Fitzgerald", isbn: "9780003", genreId: fiction.id },
-    { title: "To Kill a Mockingbird", author: "Harper Lee", isbn: "9780004", genreId: fiction.id },
-
-    { title: "Clean Code", author: "Robert C. Martin", isbn: "9780005", genreId: technology.id },
-    { title: "The Pragmatic Programmer", author: "Andrew Hunt", isbn: "9780006", genreId: technology.id },
-    { title: "Introduction to Algorithms", author: "Thomas Cormen", isbn: "9780007", genreId: technology.id },
-    { title: "Design Patterns", author: "Erich Gamma", isbn: "9780008", genreId: technology.id },
-
-    { title: "Atomic Habits", author: "James Clear", isbn: "9780009", genreId: selfHelp.id },
-    { title: "Deep Work", author: "Cal Newport", isbn: "9780010", genreId: selfHelp.id },
-    { title: "The 7 Habits of Highly Effective People", author: "Stephen Covey", isbn: "9780011", genreId: selfHelp.id },
-    { title: "Mindset", author: "Carol Dweck", isbn: "9780012", genreId: selfHelp.id },
-
-    { title: "Sapiens", author: "Yuval Noah Harari", isbn: "9780013", genreId: history.id },
-    { title: "The Art of War", author: "Sun Tzu", isbn: "9780014", genreId: history.id },
-    { title: "Guns, Germs, and Steel", author: "Jared Diamond", isbn: "9780015", genreId: history.id },
-    { title: "The Diary of a Young Girl", author: "Anne Frank", isbn: "9780016", genreId: history.id },
+    {
+      title: "Educated",
+      author: "Tara Westover",
+      genre: "Biography",
+      isbn: "9780399590504",
+      description: "A memoir about education and personal transformation.",
+    },
+    {
+      title: "Long Walk to Freedom",
+      author: "Nelson Mandela",
+      genre: "Biography",
+      isbn: "9780316548182",
+      description: "The autobiography of Nelson Mandela.",
+    },
+    {
+      title: "The Diary of a Young Girl",
+      author: "Anne Frank",
+      genre: "Biography",
+      isbn: "9780307594006",
+      description: "The diary of Anne Frank during World War II.",
+    },
+    {
+      title: "Becoming",
+      author: "Michelle Obama",
+      genre: "Biography",
+      isbn: "9781524763138",
+      description: "A memoir about Michelle Obama's life and experiences.",
+    },
   ];
 
-  for (const book of books) {
+  // 3. Insert books and connect each one to its genre
+  for (const book of sampleBooks) {
+    const genre = genres.find((g) => g.name === book.genre);
+
+    if (!genre) {
+      throw new Error(`Genre not found: ${book.genre}`);
+    }
+
     await prisma.book.upsert({
-      where: { isbn: book.isbn },
-      update: {},
-      create: book,
+      where: {
+        isbn: book.isbn,
+      },
+      update: {
+        title: book.title,
+        author: book.author,
+        description: book.description,
+        genreId: genre.id,
+        totalCopies: 3,
+        availableCopies: 3,
+      },
+      create: {
+        title: book.title,
+        author: book.author,
+        isbn: book.isbn,
+        description: book.description,
+        genreId: genre.id,
+        totalCopies: 3,
+        availableCopies: 3,
+      },
     });
   }
 
-  console.log("Successfully inserted 4 genres and 16 books!");
+  console.log("Successfully seeded 4 genres and 16 books!");
 }
 
 main()
   .catch((error) => {
-    console.error(error);
-    process.exit(1);
+    console.error("Seeding failed:", error);
+    process.exitCode = 1;
   })
   .finally(async () => {
     await prisma.$disconnect();

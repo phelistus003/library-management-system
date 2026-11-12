@@ -75,11 +75,9 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  name: 'name',
   email: 'email',
   password: 'password',
-  role: 'role',
-  createdAt: 'createdAt'
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -88,7 +86,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const GenreScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description'
+  slug: 'slug'
 } as const
 
 export type GenreScalarFieldEnum = (typeof GenreScalarFieldEnum)[keyof typeof GenreScalarFieldEnum]
@@ -100,8 +98,9 @@ export const BookScalarFieldEnum = {
   author: 'author',
   isbn: 'isbn',
   description: 'description',
-  publishedAt: 'publishedAt',
-  available: 'available',
+  coverImage: 'coverImage',
+  totalCopies: 'totalCopies',
+  availableCopies: 'availableCopies',
   genreId: 'genreId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

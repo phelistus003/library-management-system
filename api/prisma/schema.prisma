@@ -15,49 +15,48 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(PATRON)
-  createdAt DateTime @default(now())
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role   @default(PATRON)
 
-  reviews   Review[]
+  reviews  Review[]
 }
 
 model Genre {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  description String?
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  slug  String @unique
 
-  books       Book[]
+  books Book[]
 }
 
 model Book {
-  id          String   @id @default(uuid())
-  title       String
-  author      String
-  isbn        String   @unique
-  description String?
-  publishedAt DateTime?
-  available   Boolean  @default(true)
+  id              Int      @id @default(autoincrement())
+  title           String
+  author          String
+  isbn            String   @unique
+  description     String
+  coverImage      String?
+  totalCopies     Int      @default(1)
+  availableCopies Int      @default(1)
 
-  genreId     String
-  genre       Genre    @relation(fields: [genreId], references: [id], onDelete: Restrict)
+  genreId         Int
+  genre           Genre    @relation(fields: [genreId], references: [id], onDelete: Restrict)
 
-  reviews     Review[]
+  reviews         Review[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Review {
-  id        String   @id @default(uuid())
+  id        Int      @id @default(autoincrement())
   rating    Int
   comment   String?
 
-  bookId    String
-  userId    String
+  bookId    Int
+  userId    Int
 
   book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
